@@ -69,9 +69,9 @@ class AnswerModel {
   //Method to fetch the number of answers provided by a drep
   static async getDrepAnswers(id: string): Promise<number> {
     try {
-      const { count, error } = await supabase
+      const { data, error } = await supabase
         .from("answers")
-        .select("", { count: "exact", head: true })
+        .select("id", { count: "exact" })
         .eq("drep_id", id);
 
       if (error) {
@@ -79,7 +79,7 @@ class AnswerModel {
         return 0;
       }
 
-      return count ?? 0;
+      return data?.length ?? 0;
     } catch (err: any) {
       console.error(`Exception in getDrepAnswers for drep_id ${id}:`, err);
       return 0;

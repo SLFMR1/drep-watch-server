@@ -74,9 +74,9 @@ class QuestionModel {
   //method to fetch the number of questions asked to a drep provided its drep_id
   static async getDrepQuestions(id: string): Promise<number> {
     try {
-      const { count, error } = await supabase
+      const { data, error } = await supabase
         .from("questions")
-        .select("", { count: "exact", head: true })
+        .select("id", { count: "exact" })
         .eq("drep_id", id);
 
       if (error) {
@@ -84,8 +84,7 @@ class QuestionModel {
         return 0;
       }
 
-      return count ?? 0;
-
+      return data?.length ?? 0;
     } catch (err: any) {
       console.error(`Exception in getDrepQuestions for drep_id ${id}:`, err);
       return 0;

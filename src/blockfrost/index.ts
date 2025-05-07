@@ -4,4 +4,5 @@ dotenv.config();
 
 export const blockfrost = new BlockFrostAPI({
   projectId: process.env.BLOCKFROST_PROJECT_ID ?? "",
+  requestTimeout: 2000, // Add 2-second timeout
 });

@@ -11,6 +11,7 @@ import drepRoutes from "./routers/drepRoute";
 import questionRoutes from "./routers/questionRoutes";
 import answerRoutes from "./routers/answerRoutes";
 import notificationRoutes from "./routers/notificationRoutes";
+import networkRoutes from "./routers/networkRoute";
 import supabase from "./supabase/db";
 
 const app = express();
@@ -30,6 +31,7 @@ app.use("/api/v1/drep", drepRoutes);
 app.use("/api/v1/questions", questionRoutes);
 app.use("/api/v1/answers", answerRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/network", networkRoutes);
 
 app.get('/test', (req, res) => {
   console.log('Test endpoint hit at:', new Date().toISOString());

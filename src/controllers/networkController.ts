@@ -43,7 +43,7 @@ export const getProtocolParameters = async (req: Request, res: Response) => {
             headers: {
               Authorization: `Bearer ${process.env.KOIOS_API_TOKEN}`,
             },
-            timeout: 2000 // 2 second timeout
+            timeout: 4000 // 4 second timeout
           }
         );
 
@@ -147,7 +147,7 @@ export const getCurrentSlot = async (req: Request, res: Response) => {
             headers: {
               Authorization: `Bearer ${process.env.KOIOS_API_TOKEN}`,
             },
-            timeout: 2000 // 2 second timeout
+            timeout: 4000 // 4 second timeout
           }
         );
 

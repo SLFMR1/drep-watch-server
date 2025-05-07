@@ -21,9 +21,9 @@ app.use(express.urlencoded({ extended: true, limit: '1gb' }));
 
 app.use(cookieParser());
 app.use(cors({
-  origin: '*',
+  origin: 'https://www.drep.watch',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma']
 }));
 
 app.use("/api/v1/user", userRoutes);

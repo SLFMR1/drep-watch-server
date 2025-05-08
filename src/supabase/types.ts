@@ -225,7 +225,19 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      dreps_with_total_votes: {
+        Row: {
+          drep_id: string;
+          name: string | null;
+          email: string | null;
+          wallet_address: string | null;
+          created_at: string;
+          vote_yes: number | null;
+          vote_no: number | null;
+          vote_abstain: number | null;
+          votes_total: number | null;
+        }
+      }
     }
     Functions: {
       [_ in never]: never

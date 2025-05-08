@@ -346,9 +346,17 @@ const getIndexedDrepsPaginated = async (req: Request, res: Response) => {
 
   try {
     // --- Build Query with Dynamic Sorting --- 
-    let query = supabase
-      .from('dreps')
-      .select('*', { count: 'exact' });
+    let query;
+    if (sortBy === 'votes_total') {
+      // Use the view for total votes sorting
+      query = supabase
+        .from('dreps_with_total_votes')
+        .select('*', { count: 'exact' });
+    } else {
+      query = supabase
+        .from('dreps')
+        .select('*', { count: 'exact' });
+    }
 
     // Apply primary sort based on sortBy parameter
     switch (sortBy) {
@@ -359,11 +367,9 @@ const getIndexedDrepsPaginated = async (req: Request, res: Response) => {
         query = query.order('questions_asked_count', { ascending: ascending, nullsFirst: false });
         break;
       case 'name':
-        // Ensure case-insensitive sorting for name if possible, or use default db collation
         query = query.order('name', { ascending: ascending, nullsFirst: true });
         break;
       case 'voting_power':
-        // Sort by voting power, always putting NULLs last
         query = query.order('voting_power', { ascending: ascending, nullsFirst: false }); 
         break;
       case 'vote_yes':
@@ -376,14 +382,10 @@ const getIndexedDrepsPaginated = async (req: Request, res: Response) => {
         query = query.order('vote_abstain', { ascending: ascending, nullsFirst: false });
         break;
       case 'votes_total':
-        // Sort by the sum of all votes using a simpler approach
-        query = query.order('vote_yes', { ascending: ascending, nullsFirst: false })
-                    .order('vote_no', { ascending: ascending, nullsFirst: false })
-                    .order('vote_abstain', { ascending: ascending, nullsFirst: false });
+        // Use the view's votes_total field for sorting
+        query = query.order('votes_total', { ascending: ascending, nullsFirst: false });
         break;
       default:
-        // Fallback to default sort if sortBy is unrecognized
-        console.warn(`[getIndexedDrepsPaginated] Unrecognized sortBy value '${sortBy}'. Defaulting to questions_answered_count desc.`);
         query = query.order('questions_answered_count', { ascending: false, nullsFirst: false });
     }
     

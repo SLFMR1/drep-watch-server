@@ -67,6 +67,33 @@ export const indexDrepsToSupabase = async (): Promise<void> => {
         const questionsAnsweredCount = await AnswerModel.getDrepAnswers(drepId);
         // console.log(`[Loop] Fetched answers for ${drepId}: ${questionsAnsweredCount}`); // Reduce logging verbosity now
 
+        // --- Fetch and count proposals ---
+        let vote_yes_count = 0;
+        let vote_no_count = 0;
+        let vote_abstain_count = 0;
+
+        try {
+          const proposals = await DrepModel.getDrepProposals(drepId);
+          if (proposals && Array.isArray(proposals)) {
+            proposals.forEach(proposal => {
+              if (proposal.vote === "Yes") {
+                vote_yes_count++;
+              } else if (proposal.vote === "No") {
+                vote_no_count++;
+              } else if (proposal.vote === "Abstain") {
+                vote_abstain_count++;
+              }
+            });
+            console.log(` -> Fetched proposals for ${drepId}: Yes=${vote_yes_count}, No=${vote_no_count}, Abstain=${vote_abstain_count}`);
+          } else {
+            console.log(` -> No proposals found or invalid format for ${drepId}.`);
+          }
+        } catch (proposalError) {
+          console.error(`Error fetching proposals for ${drepId}:`, proposalError);
+          // Keep counts as 0 if fetching proposals fails
+        }
+        // --- End Fetch and count proposals ---
+
         const drepRecord = {
           drep_id: drepId,
           name: drep.givenName || '',
@@ -78,9 +105,12 @@ export const indexDrepsToSupabase = async (): Promise<void> => {
           email: null,
           wallet_address: null,
           search_variants: null,
+          vote_yes: vote_yes_count, // Add yes votes
+          vote_no: vote_no_count,   // Add no votes
+          vote_abstain: vote_abstain_count // Add abstain votes
         };
         // Log the data being prepared for upsert
-        console.log(` -> Prepared: ID=${drepRecord.drep_id}, Name='${drepRecord.name}', Qs=${drepRecord.questions_asked_count}, As=${drepRecord.questions_answered_count}, VP=${drepRecord.voting_power}`);
+        console.log(` -> Prepared: ID=${drepRecord.drep_id}, Name='${drepRecord.name}', Qs=${drepRecord.questions_asked_count}, As=${drepRecord.questions_answered_count}, VP=${drepRecord.voting_power}, Votes(Y/N/A): ${drepRecord.vote_yes}/${drepRecord.vote_no}/${drepRecord.vote_abstain}`);
 
         drepDataForChunk.push(drepRecord);
 

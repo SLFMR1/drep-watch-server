@@ -375,6 +375,10 @@ const getIndexedDrepsPaginated = async (req: Request, res: Response) => {
       case 'vote_abstain':
         query = query.order('vote_abstain', { ascending: ascending, nullsFirst: false });
         break;
+      case 'votes_total':
+        // Sort by the sum of all votes using a computed field
+        query = query.order('(COALESCE(vote_yes, 0) + COALESCE(vote_no, 0) + COALESCE(vote_abstain, 0))', { ascending: ascending, nullsFirst: false });
+        break;
       default:
         // Fallback to default sort if sortBy is unrecognized
         console.warn(`[getIndexedDrepsPaginated] Unrecognized sortBy value '${sortBy}'. Defaulting to questions_answered_count desc.`);

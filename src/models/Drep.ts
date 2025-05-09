@@ -990,5 +990,26 @@ class DrepModel {
       return 1207;
     }
   }
+
+  static async extractHandleFromReferences(
+    references: Array<{ label: { "@value": string }; uri: { "@value": string } }> | undefined
+  ): Promise<string | undefined> {
+    if (!references) return undefined;
+    const xRef = references.find(
+      (ref) =>
+        ref.label?.["@value"]?.toLowerCase() === "x" ||
+        ref.label?.["@value"]?.toLowerCase() === "twitter"
+    );
+    if (xRef && xRef.uri?.["@value"]) {
+      const url = xRef.uri["@value"];
+      // Regex to extract handle from X/Twitter URL
+      const regex = /(?:twitter\.com|x\.com)\/([^/?\s]+)/i;
+      const match = url.match(regex);
+      if (match && match[1]) {
+        return match[1]; // Return the handle without @
+      }
+    }
+    return undefined;
+  }
 }
 export default DrepModel;

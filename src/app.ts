@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true, limit: '1gb' }));
 
 app.use(cookieParser());
 app.use(cors({
-  origin: 'https://www.drep.watch',
+  origin: ['https://www.drep.watch', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma']
 }));

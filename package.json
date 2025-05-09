@@ -30,7 +30,8 @@
     "nodemon": "^3.1.0",
     "short-uuid": "^4.2.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "puppeteer": "^24.8.2"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
